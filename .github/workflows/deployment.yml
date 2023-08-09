@@ -37,8 +37,7 @@ jobs:
     needs: build
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
     - name: Download JAR artifact
       uses: actions/download-artifact@v2
@@ -46,26 +45,26 @@ jobs:
         name: jar-artifact
         path: target/
 
-      - name: Install EB CLI
-        run: |
-          pip install --upgrade pip
-          pip install awsebcli --upgrade --user
+    - name: Install EB CLI
+      run: |
+        pip install --upgrade pip
+        pip install awsebcli --upgrade --user
 
-      - name: Run ls
-        run: |
-          ls
+    - name: Run ls
+      run: |
+        ls
 
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v13
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }} #This is referred from Github Secrets
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} #This is referred from Github Secrets
-          use_existing_version_if_available: true
-          application_name: eb-java-github-ci-cd #Application name we created in Elastic BeanStalk
-          environment_name: Ebjavagithubcicd-env #Environment name we created in Elastic BeanStalk
-          version_label: ${{github.SHA}}
-          region: us-east-1 #VERY IMPORTANT: AWS Region where initially Applciation was created in AWS EBS. We created in us-east-1 which is N-Virginia
-          deployment_package: test-env.jar #download artifacts from previous job
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v13
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }} #This is referred from Github Secrets
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} #This is referred from Github Secrets
+        use_existing_version_if_available: true
+        application_name: eb-java-github-ci-cd #Application name we created in Elastic BeanStalk
+        environment_name: Ebjavagithubcicd-env #Environment name we created in Elastic BeanStalk
+        version_label: ${{github.SHA}}
+        region: us-east-1 #VERY IMPORTANT: AWS Region where initially Applciation was created in AWS EBS. We created in us-east-1 which is N-Virginia
+        deployment_package: test-env.jar #download artifacts from previous job
 
       # - name: Set up AWS CLI
       #   uses: aws-actions/configure-aws-credentials@v1
