@@ -18,6 +18,8 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml -DskipTests
+    - name: move jar file to root
+      run: mv target/*.jar app.jar
   
   deploy:
     needs: build
