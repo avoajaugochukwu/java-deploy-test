@@ -53,6 +53,7 @@ jobs:
     - name: Run ls
       run: |
         ls
+        ls target
 
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v13
