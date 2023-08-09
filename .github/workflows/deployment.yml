@@ -40,6 +40,6 @@ jobs:
 
       - name: Deploy to AWS
         run: |
-          echo -e "1\ny" | eb init -r us-east-1
+          echo -e "1\nn" | eb init -r us-east-1
           eb deploy
           # Use AWS CLI commands here to deploy your application or perform any other AWS-related tasks
