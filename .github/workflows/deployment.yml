@@ -74,7 +74,7 @@ jobs:
       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       #     aws-region: us-east-1  # Replace with your desired AWS region
 
-      # - name: Deploy to AWS
+      # - name: Deploy to AWS 
       #   run: |
       #     echo -e "1\nn" | eb init -r us-east-1
       #     eb deploy
