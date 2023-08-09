@@ -65,7 +65,7 @@ jobs:
         environment_name: Ebjavagithubcicd-env #Environment name we created in Elastic BeanStalk
         version_label: ${{github.SHA}}
         region: us-east-1 #VERY IMPORTANT: AWS Region where initially Applciation was created in AWS EBS. We created in us-east-1 which is N-Virginia
-        deployment_package: test-env.jar #download artifacts from previous job
+        deployment_package: target/test-env.jar #download artifacts from previous job
 
       # - name: Set up AWS CLI
       #   uses: aws-actions/configure-aws-credentials@v1
