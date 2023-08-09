@@ -28,9 +28,8 @@ jobs:
 
       - name: Install EB CLI
         run: |
-          apt-get update
-          apt-get install python3-pip
-          pip3 install awsebcli --upgrade --user
+          pip install --upgrade pip
+          pip install awsebcli --upgrade --user
 
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
