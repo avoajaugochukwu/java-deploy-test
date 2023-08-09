@@ -26,7 +26,7 @@ jobs:
     - name: Run ls target
       run: ls target
     
-    -name: Upload JAR artifact
+    - name: Upload JAR artifact
     - uses: actions/upload-artifact@v2
       with:
         name: jar-artifact
