@@ -20,11 +20,6 @@ jobs:
 
     - name: Build with Maven
       run: mvn clean -B package -DskipTests --file pom.xml
-
-    - name: Run ls
-      run: ls
-    - name: Run ls target
-      run: ls target
     
     - name: Upload JAR artifact
       uses: actions/upload-artifact@v2
@@ -45,15 +40,10 @@ jobs:
         name: jar-artifact
         path: target/
 
-    - name: Install EB CLI
-      run: |
-        pip install --upgrade pip
-        pip install awsebcli --upgrade --user
-
-    - name: Run ls
-      run: |
-        ls
-        ls target
+    # - name: Install EB CLI
+    #   run: |
+    #     pip install --upgrade pip
+    #     pip install awsebcli --upgrade --user
 
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v13
@@ -61,21 +51,8 @@ jobs:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }} #This is referred from Github Secrets
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} #This is referred from Github Secrets
         use_existing_version_if_available: true
-        application_name: tf-spring #Application name we created in Elastic BeanStalk
-        environment_name: tf-spring-env #Environment name we created in Elastic BeanStalk
+        application_name: tf-spring #Application name we created in Elastic BeanStalk / Terraform
+        environment_name: tf-spring-env #Environment name we created in Elastic BeanStalk / Terraform
         version_label: ${{github.SHA}}
         region: us-east-1 #VERY IMPORTANT: AWS Region where initially Applciation was created in AWS EBS. We created in us-east-1 which is N-Virginia
         deployment_package: target/test-env.jar #download artifacts from previous job
-
-      # - name: Set up AWS CLI
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-1  # Replace with your desired AWS region
-
-      # - name: Deploy to AWS 
-      #   run: |
-      #     echo -e "1\nn" | eb init -r us-east-1
-      #     eb deploy
-      #     # Use AWS CLI commands here to deploy your application or perform any other AWS-related tasks
