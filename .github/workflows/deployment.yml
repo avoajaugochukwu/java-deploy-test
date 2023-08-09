@@ -37,15 +37,14 @@ jobs:
     needs: build
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
-      - name: Download JAR artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: jar-artifact
-          path: target/
-
+    - name: Download JAR artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: jar-artifact
+        path: target/
 
       - name: Install EB CLI
         run: |
