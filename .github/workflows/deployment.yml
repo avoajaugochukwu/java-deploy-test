@@ -19,15 +19,22 @@ jobs:
         cache: maven
 
     - name: Build with Maven
-      run: mvn clean package -DskipTests
-
-    - name: Move jar file to root
-      run: mv target/*.jar app.jar
+      run: mvn clean -B package -DskipTests --file pom.xml
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: artifact
+        path: target/test-env.jar
   
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          # path: target
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -36,15 +43,27 @@ jobs:
           pip install --upgrade pip
           pip install awsebcli --upgrade --user
 
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v13
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Replace with your desired AWS region
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }} #This is referred from Github Secrets
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} #This is referred from Github Secrets
+          use_existing_version_if_available: true
+          application_name: eb-java-github-ci-cd #Application name we created in Elastic BeanStalk
+          environment_name: Ebjavagithubcicd-env #Environment name we created in Elastic BeanStalk
+          version_label: ${{github.SHA}}
+          region: us-east-1 #VERY IMPORTANT: AWS Region where initially Applciation was created in AWS EBS. We created in us-east-1 which is N-Virginia
+          deployment_package: test-env.jar #download artifacts from previous job
 
-      - name: Deploy to AWS
-        run: |
-          echo -e "1\nn" | eb init -r us-east-1
-          eb deploy
-          # Use AWS CLI commands here to deploy your application or perform any other AWS-related tasks
+      # - name: Set up AWS CLI
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: us-east-1  # Replace with your desired AWS region
+
+      # - name: Deploy to AWS
+      #   run: |
+      #     echo -e "1\nn" | eb init -r us-east-1
+      #     eb deploy
+      #     # Use AWS CLI commands here to deploy your application or perform any other AWS-related tasks
