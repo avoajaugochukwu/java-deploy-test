@@ -40,11 +40,6 @@ jobs:
         name: jar-artifact
         path: target/
 
-    # - name: Install EB CLI
-    #   run: |
-    #     pip install --upgrade pip
-    #     pip install awsebcli --upgrade --user
-
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v13
       with:
